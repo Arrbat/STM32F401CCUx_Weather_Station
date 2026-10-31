@@ -16,6 +16,7 @@ _restore_backup_*/
 fp-info-cache
 sym-lib-table
 \#auto_saved_files#
+*.kicad_prl
 
 # Local workspace
 .history/
