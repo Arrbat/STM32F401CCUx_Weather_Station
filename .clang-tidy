@@ -9,6 +9,17 @@ Checks: >
   misc-*,
   portability-*,
   readability-*,
+  cppcoreguidelines-init-variables,
+  cppcoreguidelines-avoid-non-const-global-variables,
+  cppcoreguidelines-macro-usage,
+  cppcoreguidelines-avoid-goto,
+  cppcoreguidelines-narrowing-conversions,
+  hicpp-signed-bitwise,
+  hicpp-multiway-paths-covered,
+  hicpp-no-assembler,
+  hicpp-avoid-goto,
+  performance-no-int-to-ptr,
+  performance-enum-size,
   -bugprone-easily-swappable-parameters,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
   -misc-include-cleaner,
@@ -73,6 +84,7 @@ WarningsAsErrors: >
   misc-non-copyable-objects,
   readability-misleading-indentation
 
+HeaderFilterRegex: '^(app|drivers)/'
 SystemHeaders: false
 FormatStyle: none
 
@@ -96,6 +108,19 @@ ExtraArgs:
   - -Wvla
   - -Wimplicit-fallthrough
   - -Wunreachable-code
+  - -Wcast-function-type
+  - -Wconditional-uninitialized
+  - -Wduplicate-enum
+  - -Wformat-nonliteral
+  - -Wbitfield-enum-conversion
+  - -Wimplicit-int-conversion
+  - -Wimplicit-float-conversion
+  - -Wmissing-noreturn
+  - -Wnewline-eof
+  - -Wnull-dereference
+  - -Wpointer-arith
+  - -Wunused-macros
+  - -Wextra-semi
 
 CheckOptions:
   - key: readability-function-cognitive-complexity.Threshold
@@ -110,6 +135,10 @@ CheckOptions:
     value: '6'
   - key: readability-function-size.NestingThreshold
     value: '4'
+  - key: readability-function-size.VariableThreshold
+    value: '15'
+  - key: readability-function-size.BranchThreshold
+    value: '20'
   - key: readability-implicit-bool-conversion.AllowIntegerConditions
     value: 'false'
   - key: readability-implicit-bool-conversion.AllowPointerConditions
@@ -123,6 +152,12 @@ CheckOptions:
   - key: cert-dcl37-c.AllowedIdentifiers
     value: '_estack;_sidata;_sdata;_edata;_sbss;_ebss'
   - key: cert-err33-c.AllowCastToVoid
+    value: 'true'
+  - key: bugprone-unsafe-functions.ReportMoreUnsafeFunctions
+    value: 'true'
+  - key: hicpp-signed-bitwise.IgnorePositiveIntegerLiterals
+    value: 'true'
+  - key: cppcoreguidelines-macro-usage.CheckCapsOnly
     value: 'true'
 
   # naming: general
