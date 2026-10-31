@@ -19,6 +19,7 @@ add_subdirectory(${CUBEMX_DIR}/cmake/stm32cubemx cubemx_build)
 
 #Root instructions
 target_sources(${PROJECT_NAME} PRIVATE
+    app/src/app.c
     app/src/logger.c
     drivers/driver_uart.c
 )

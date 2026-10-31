@@ -26,6 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "app.h"
 #include "driver_uart.h"
 /* USER CODE END Includes */
 
@@ -96,6 +97,7 @@ int main(void)
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   drv_uart_init(&huart2);
+  app_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
