@@ -19,10 +19,10 @@ add_subdirectory(${CUBEMX_DIR}/cmake/stm32cubemx cubemx_build)
 
 #Root instructions
 target_sources(${PROJECT_NAME} PRIVATE
-    app/main.c
+    drivers/driver_uart.c
 )
 target_include_directories(${PROJECT_NAME} PRIVATE
-    app/
+    drivers/
 )
 
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
