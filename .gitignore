@@ -24,7 +24,3 @@ sym-lib-table
 .settings/
 .vscode/
 notes.txt
-
-# Local clang configs for vendor code
-vendor/.clang-format
-vendor/.clang-tidy
