@@ -675,7 +675,7 @@
     "top_level_sheets": [
       {
         "filename": "kicad_STM32F401CCU6_meteostation.kicad_sch",
-        "name": "kicad_STM32F401CCU6_meteostation",
+        "name": "kicad_STM32F401CCU6_weather_station",
         "uuid": "d357996e-dbf2-4ea9-a910-dce674dbe94c"
       }
     ],
@@ -685,7 +685,7 @@
   "sheets": [
     [
       "d357996e-dbf2-4ea9-a910-dce674dbe94c",
-      "kicad_STM32F401CCU6_meteostation"
+      "kicad_STM32F401CCU6_weather_station"
     ],
     [
       "2b0d3a3f-870c-49a6-9675-ada91808f994",

@@ -71,15 +71,15 @@ jobs:
         run: cmake --build --preset ${{ matrix.build_type }}
 
       - name: Report firmware size
-        run: arm-none-eabi-size build/${{ matrix.build_type }}/Meteostation.elf
+        run: arm-none-eabi-size build/${{ matrix.build_type }}/Weather_Station.elf
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
         with:
           name: meteostation-${{ matrix.build_type }}
           path: |
-            build/${{ matrix.build_type }}/Meteostation.elf
-            build/${{ matrix.build_type }}/Meteostation.map
+            build/${{ matrix.build_type }}/Weather_Station.elf
+            build/${{ matrix.build_type }}/Weather_Station.map
           if-no-files-found: warn
           retention-days: 14
 
