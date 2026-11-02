@@ -4,15 +4,15 @@
 #include <stdint.h>
 #include <string.h>
 
-typedef struct
+struct uart_ctx
 {
     const char *buffer;
     size_t buffer_length;
     UART_HandleTypeDef *handle;
-} uart_ctx_t;
+};
 
 static char uart_tx_buffer[DRV_UART_TX_BUFFER_SIZE];
-static uart_ctx_t uart_ctx;
+static struct uart_ctx uart_ctx;
 
 /*
  * gState is used directly instead of HAL_UART_GetState(): GetState returns
@@ -27,8 +27,8 @@ uart_is_busy(const UART_HandleTypeDef *handle)
     return handle->gState != HAL_UART_STATE_READY;
 }
 
-static drv_uart_status_t
-drv_uart_transmit(uart_ctx_t *ctx)
+static enum drv_uart_status
+drv_uart_transmit(struct uart_ctx *ctx)
 {
     HAL_StatusTypeDef hal_ret = HAL_OK;
 
@@ -60,7 +60,7 @@ drv_uart_transmit(uart_ctx_t *ctx)
     return DRV_UART_OK;
 }
 
-drv_uart_status_t
+enum drv_uart_status
 drv_uart_init(void *handle)
 {
     if (handle == NULL)
@@ -80,7 +80,7 @@ drv_uart_init(void *handle)
     return DRV_UART_OK;
 }
 
-drv_uart_status_t
+enum drv_uart_status
 drv_uart_write(const char *buffer, size_t buffer_length)
 {
     if (buffer == NULL || buffer_length == 0
