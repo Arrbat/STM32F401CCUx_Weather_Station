@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-project(Meteostation C CXX ASM)
+project(Weather_Station C CXX ASM)
 
 add_executable(${PROJECT_NAME})
 
@@ -30,8 +30,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     drivers/
 )
 
+# CubeMX generated. CPP is not used in project, but if CPP will be added - do not remove this field
+# Remove wrong libob.a library dependency when using cpp files
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
-
 
 # This part resolves the "linker script not found [...] No such file or directory [...]"
 # Initially, CubeMX expects that root CMakeLists and .ld are in the same directory
@@ -44,4 +45,6 @@ endif()
 string(REGEX REPLACE "-T *\"[^\"]+\\.ld\"" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 target_link_options(${PROJECT_NAME} PRIVATE -T${LINKER_SCRIPTS})
 
+# Making this field as PRIVATE will cause error
+# /cmake/stm32cubemx/CMakeLists.txt uses the plain signature for target_link_libraries with same target
 target_link_libraries(${PROJECT_NAME} stm32cubemx)

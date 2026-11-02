@@ -22,6 +22,8 @@ enum drv_uart_status
 enum drv_uart_status drv_uart_init(void *handle);
 
 /* Thread mode only */
+/* 128 bytes frame takes around 11 ms at 115200 baudrate to transmit the message 
+   if logs' delay is less than 11 ms TX line will return BUSY state and message will be dropped */
 enum drv_uart_status drv_uart_write(const char *buffer, size_t buffer_length);
 
 #endif /* DRIVER_UART_H */
