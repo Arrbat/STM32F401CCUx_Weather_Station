@@ -20,6 +20,7 @@
 #include "main.h"
 #include "adc.h"
 #include "rtc.h"
+#include "stm32f401xc.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -47,7 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+const uint8_t * volatile g_assert_file;
+volatile uint32_t g_assert_line;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -185,8 +187,22 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  __disable_irq();
+  g_assert_file = file;
+  g_assert_line = line;
+
+  if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) != 0U)
+  {
+    __BKPT(0);
+  }
+
+  /* Debug build/Preset: when an assert is triggered without a debugger attached,
+  the device halts in while(1) (expected behavior).
+  In release builds, USE_FULL_ASSERT is not defined, so this function is not called. */
+  while (1)
+  {
+  }
   /* USER CODE END 6 */
+
 }
 #endif /* USE_FULL_ASSERT */
