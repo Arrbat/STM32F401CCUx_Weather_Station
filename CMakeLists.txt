@@ -13,11 +13,16 @@ project(Weather_Station C CXX ASM)
 
 add_executable(${PROJECT_NAME})
 
-#CubeMX 
 set(CUBEMX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/CubeMX_Meteostation)
 add_subdirectory(${CUBEMX_DIR}/cmake/stm32cubemx cubemx_build)
 
-#Root instructions
+target_compile_definitions(Weather_Station PRIVATE
+    $<$<CONFIG:Debug>:USE_FULL_ASSERT>
+)
+target_compile_definitions(stm32cubemx INTERFACE
+    $<$<CONFIG:Debug>:USE_FULL_ASSERT>
+)
+
 target_sources(${PROJECT_NAME} PRIVATE
     app/src/app.c
     app/src/logger.c
@@ -30,8 +35,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     drivers/
 )
 
-# CubeMX generated. CPP is not used in project, but if CPP will be added - do not remove this field
-# Remove wrong libob.a library dependency when using cpp files
+# CubeMX generated. CPP is not used in project, but if CPP will be added - do not remove this list
+# "Remove wrong libob.a library dependency when using cpp files"
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # This part resolves the "linker script not found [...] No such file or directory [...]"
