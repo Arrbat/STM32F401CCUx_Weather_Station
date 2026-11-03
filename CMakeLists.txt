@@ -90,6 +90,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     app/src/
     app/inc/
     drivers/
+    toolchain/
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE

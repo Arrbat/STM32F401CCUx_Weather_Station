@@ -1,6 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "gcc.h"
 #include <stddef.h>
 #include <stdint.h>
 
@@ -30,7 +31,8 @@ enum logger_status
 };
 
 /* Thread mode only. Not safe to call from ISR. */
-enum logger_status logger_log(enum log_level level, const char *message);
-enum logger_status logger_init(void);
+WS_MUST_CHECK enum logger_status logger_log(enum log_level level,
+                                            const char *message);
+WS_MUST_CHECK enum logger_status logger_init(void);
 
 #endif /* LOGGER_H */
