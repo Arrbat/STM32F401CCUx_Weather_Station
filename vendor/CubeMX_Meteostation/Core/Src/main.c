@@ -27,7 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "app.h"
-#include "driver_uart.h"
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +50,7 @@
 /* USER CODE BEGIN PV */
 const uint8_t * volatile g_assert_file;
 volatile uint32_t g_assert_line;
+volatile uint32_t g_init_error;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,8 +97,12 @@ int main(void)
   MX_USART2_UART_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  drv_uart_init(&huart2);
-  app_init();
+  enum app_status app_return_code = app_init(&huart2);
+  if (app_return_code != APP_OK)
+  {
+    g_init_error = (uint32_t)app_return_code;
+    Error_Handler();
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
