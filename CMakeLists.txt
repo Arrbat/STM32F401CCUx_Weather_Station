@@ -11,32 +11,95 @@ endif()
 
 project(Weather_Station C CXX ASM)
 
+# Flags only for sources
+set(WARN_C
+    -Wall -Wextra -Wpedantic
+    -Wshadow
+    -Wconversion
+    -Wdouble-promotion
+    -Wpointer-arith
+    -Wvla
+    -Wwrite-strings
+    -Wcast-qual
+    -Wcast-align=strict
+    -Wfloat-equal
+
+    -Wformat=2
+    -Wformat-signedness
+    -Wformat-overflow=2
+    -Wformat-truncation=2
+
+    -Wduplicated-cond
+    -Wduplicated-branches
+    -Wlogical-op
+    -Wnull-dereference
+    -Wswitch-default
+    -Wswitch-enum
+    -Wjump-misses-init
+
+    # declarations
+    -Wstrict-prototypes
+    -Wmissing-prototypes
+    -Wmissing-declarations
+    -Wold-style-definition
+    -Wredundant-decls
+    -Wnested-externs
+
+    # preprocessor
+    -Wundef
+    -Wunused-macros
+    -Wmissing-include-dirs
+    -Wtrampolines
+    -Walloca
+)
+
 add_executable(${PROJECT_NAME})
 
 set(CUBEMX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/CubeMX_Meteostation)
 add_subdirectory(${CUBEMX_DIR}/cmake/stm32cubemx cubemx_build)
 
-target_compile_definitions(Weather_Station PRIVATE
+# Treat CubeMX/HAL/CMSIS include dirs as system so their headers do not
+# produce warnings when included from project sources
+get_target_property(_cubemx_inc stm32cubemx INTERFACE_INCLUDE_DIRECTORIES)
+if(_cubemx_inc)
+    set_target_properties(stm32cubemx PROPERTIES
+        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${_cubemx_inc}")
+endif()
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
     $<$<CONFIG:Debug>:USE_FULL_ASSERT>
 )
 target_compile_definitions(stm32cubemx INTERFACE
     $<$<CONFIG:Debug>:USE_FULL_ASSERT>
 )
 
-target_sources(${PROJECT_NAME} PRIVATE
+set(APP_SOURCES
     app/src/app.c
     app/src/logger.c
     drivers/driver_uart.c
 )
-target_include_directories(${PROJECT_NAME} PRIVATE   
+
+target_sources(${PROJECT_NAME} PRIVATE ${APP_SOURCES})
+
+set_source_files_properties(${APP_SOURCES} PROPERTIES
+    COMPILE_OPTIONS "${WARN_C}"
+)
+
+target_include_directories(${PROJECT_NAME} PRIVATE
     app/
     app/src/
     app/inc/
     drivers/
 )
 
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<CONFIG:Debug>:-Og>
+    $<$<CONFIG:Debug>:-g3>
+    $<$<CONFIG:Release>:-Os>
+)
+
 # CubeMX generated. CPP is not used in project, but if CPP will be added - do not remove this list
-# "Remove wrong libob.a library dependency when using cpp files"
+# Explanation: "Remove wrong libob.a library dependency when using cpp files"
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # This part resolves the "linker script not found [...] No such file or directory [...]"
