@@ -84,7 +84,7 @@ WarningsAsErrors: >
   misc-non-copyable-objects,
   readability-misleading-indentation
 
-HeaderFilterRegex: '^(app|drivers)/'
+HeaderFilterRegex: '^(app|drivers|toolchain)/'
 SystemHeaders: false
 FormatStyle: none
 
