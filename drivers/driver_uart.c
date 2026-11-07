@@ -1,6 +1,5 @@
 #include "driver_uart.h"
 #include "usart.h"
-#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -18,10 +17,25 @@ drv_uart_handle_storage(void)
  * BUSY_TX happens only in HAL_UART_Transmit_IT(), called from thread mode.
  * So a "READY" reading cannot become stale before memcpy().
  */
-static bool
-uart_is_busy(const UART_HandleTypeDef *handle)
+static enum drv_uart_status
+uart_status_from_state(const UART_HandleTypeDef *handle)
 {
-    return handle->gState != HAL_UART_STATE_READY;
+    switch (handle->gState)
+    {
+    case HAL_UART_STATE_READY:
+        return DRV_UART_OK;
+    case HAL_UART_STATE_RESET:
+        return DRV_UART_ERR_NOT_INIT;
+    case HAL_UART_STATE_BUSY:
+    case HAL_UART_STATE_BUSY_TX:
+    case HAL_UART_STATE_BUSY_RX:
+    case HAL_UART_STATE_BUSY_TX_RX:
+        return DRV_UART_ERR_BUSY;
+    case HAL_UART_STATE_TIMEOUT:
+    case HAL_UART_STATE_ERROR:
+    default:
+        return DRV_UART_ERR_HAL;
+    }
 }
 
 static enum drv_uart_status
@@ -36,9 +50,10 @@ drv_uart_transmit(UART_HandleTypeDef *handle, const char *buffer,
         return DRV_UART_ERR_PARAM;
     }
 
-    if (uart_is_busy(handle))
+    enum drv_uart_status status = uart_status_from_state(handle);
+    if (status != DRV_UART_OK)
     {
-        return DRV_UART_ERR_BUSY;
+        return status;
     }
 
     hal_ret = HAL_UART_Transmit_IT(handle, (uint8_t *)buffer,
@@ -95,9 +110,10 @@ drv_uart_write(const char *buffer, size_t buffer_length)
     }
 
     /* Must precede memcpy(): the TX ISR may still be reading the buffer. */
-    if (uart_is_busy(handle))
+    enum drv_uart_status status = uart_status_from_state(handle);
+    if (status != DRV_UART_OK)
     {
-        return DRV_UART_ERR_BUSY;
+        return status;
     }
 
     memcpy(uart_tx_buffer, buffer, buffer_length);
