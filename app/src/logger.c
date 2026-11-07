@@ -6,7 +6,9 @@
 _Static_assert(MAX_LOG_LENGTH <= DRV_UART_TX_BUFFER_SIZE,
                "MAX_LOG_LENGTH exceeds the UART driver TX buffer");
 
-static uint8_t is_initialized;
+static uint8_t
+    is_initialized; /* NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+                     */
 
 static const char *const LEVEL_NAME[] = {
     [LOG_LEVEL_NONE] = "NONE",       [LOG_LEVEL_ERROR] = "ERROR",
@@ -69,6 +71,10 @@ logger_log(enum log_level level, const char *message)
         return LOGGER_OK;
     case DRV_UART_ERR_BUSY:
         return LOGGER_ERR_BUSY;
+    case DRV_UART_ERR_PARAM:
+    case DRV_UART_ERR_NOT_INIT:
+    case DRV_UART_ERR_ALREADY_INIT:
+    case DRV_UART_ERR_HAL:
     default:
         return LOGGER_ERR_DRIVER;
     }
