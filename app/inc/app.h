@@ -11,6 +11,7 @@ enum app_status
     APP_ERR_LOGGER,
 };
 
+/* Thread mode only. Safe to retry with the same UART handle. */
 WS_MUST_CHECK enum app_status app_init(void *uart_handle);
 
 #endif /* APP_H */
