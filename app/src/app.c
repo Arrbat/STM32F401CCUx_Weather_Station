@@ -5,17 +5,19 @@
 enum app_status
 app_init(void *uart_handle)
 {
-    if (drv_uart_init(uart_handle) != DRV_UART_OK)
+    enum drv_uart_status uart_status = drv_uart_init(uart_handle);
+    if (uart_status != DRV_UART_OK && uart_status != DRV_UART_ERR_ALREADY_INIT)
     {
         return APP_ERR_UART;
     }
 
-    if (logger_init() != LOGGER_OK)
+    enum logger_status logger_status = logger_init();
+    if (logger_status != LOGGER_OK && logger_status != LOGGER_ERR_ALREADY_INIT)
     {
         return APP_ERR_LOGGER_INIT;
     }
 
-    if (logger_log(LOG_LEVEL_INFO, "boot done") != LOGGER_OK)
+    if (logger_log(LOG_LEVEL_INFO, "Initialized main components") != LOGGER_OK)
     {
         return APP_ERR_LOGGER;
     }
