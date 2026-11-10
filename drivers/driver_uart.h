@@ -20,6 +20,7 @@ enum drv_uart_status
     DRV_UART_ERR_HAL,
 };
 
+/* A repeated init is accepted only when it uses the original handle. */
 WS_MUST_CHECK enum drv_uart_status drv_uart_init(void *handle);
 
 /* Thread mode only */
