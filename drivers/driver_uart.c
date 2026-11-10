@@ -84,7 +84,11 @@ drv_uart_init(void *handle)
 
     if (*handle_storage != NULL)
     {
-        return DRV_UART_ERR_ALREADY_INIT;
+        if (*handle_storage == handle)
+        {
+            return DRV_UART_ERR_ALREADY_INIT;
+        }
+        return DRV_UART_ERR_PARAM;
     }
 
     *handle_storage = (UART_HandleTypeDef *)handle;
