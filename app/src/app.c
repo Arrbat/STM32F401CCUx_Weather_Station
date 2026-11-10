@@ -5,6 +5,8 @@
 enum app_status
 app_init(void *uart_handle)
 {
+    static uint8_t initialization_logged;
+
     enum drv_uart_status uart_status = drv_uart_init(uart_handle);
     if (uart_status != DRV_UART_OK && uart_status != DRV_UART_ERR_ALREADY_INIT)
     {
@@ -17,10 +19,13 @@ app_init(void *uart_handle)
         return APP_ERR_LOGGER_INIT;
     }
 
-    if (logger_log(LOG_LEVEL_INFO, "Initialized main components") != LOGGER_OK)
+    if (initialization_logged != 1U
+        && logger_log(LOG_LEVEL_INFO, "Initialized main components")
+               != LOGGER_OK)
     {
         return APP_ERR_LOGGER;
     }
 
+    initialization_logged = 1U;
     return APP_OK;
 }
