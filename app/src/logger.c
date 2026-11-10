@@ -44,8 +44,8 @@ enum logger_status
 logger_log(enum log_level level, const char *message)
 {
     char frame[MAX_LOG_LENGTH];
-    /* One byte is reserved for the trailing '\n'. */
-    const size_t text_limit = MAX_LOG_LENGTH - 1;
+    /* Two bytes are reserved for the trailing "\r\n". */
+    const size_t text_limit = MAX_LOG_LENGTH - 2;
     size_t i = 0;
 
     if (is_initialized == 0)
@@ -58,11 +58,12 @@ logger_log(enum log_level level, const char *message)
         return LOGGER_ERR_PARAM;
     }
 
-    /* "[LEVEL] message\n" */
+    /* "[LEVEL] message\r\n" */
     i = append(frame, i, text_limit, "[");
     i = append(frame, i, text_limit, LEVEL_NAME[level]);
     i = append(frame, i, text_limit, "] ");
     i = append(frame, i, text_limit, message);
+    frame[i++] = '\r';
     frame[i++] = '\n';
 
     switch (drv_uart_write(frame, i))

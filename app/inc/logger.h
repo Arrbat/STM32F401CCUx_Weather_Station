@@ -14,7 +14,7 @@ enum log_level
     LOG_LEVEL_DEBUG,
 };
 
-/* Maximum length of one output frame in bytes, including the final '\n'. */
+/* Maximum length of one output frame in bytes, including the final "\r\n". */
 enum
 {
     MAX_LOG_LENGTH = 128,
